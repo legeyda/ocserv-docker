@@ -1,0 +1,20 @@
+#!/usr/bin/env shelduck_run
+set -eu
+
+shelduck import https://raw.githubusercontent.com/legeyda/bobshell/refs/heads/unstable/run.sh
+shelduck import https://raw.githubusercontent.com/legeyda/bobshell/refs/heads/unstable/git.sh
+shelduck import https://raw.githubusercontent.com/legeyda/bobshell/refs/heads/unstable/string.sh
+
+run_build() {
+	run_docker_build "$@"
+}
+
+run_docker_build() {
+	docker build . --progress=plain --tag myocserv
+}
+
+run_version() {
+	git_version
+}
+
+shelduck import https://raw.githubusercontent.com/legeyda/bobshell/refs/heads/unstable/entry_point.sh
