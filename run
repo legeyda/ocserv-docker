@@ -10,11 +10,21 @@ run_build() {
 }
 
 run_docker_build() {
-	docker build . --progress=plain --tag myocserv
+	run_docker_build_version=$(bobshell_git_version)
+	docker build . --progress=plain --tag legeyda/ocserv --tag "legeyda/ocserv:$run_docker_build_version"
+}
+
+run_docker_push() {
+	bobshell_git_is_clean || bobshell_die 'working folder has local modifications'
+	run_docker_push_version=$(bobshell_git_version_tag)
+	bobshell_split_first "$run_docker_push_version" - OCSERV_VERSION || bobshell_die "wrong tag format: $run_docker_push_version"
+	export OCSERV_VERSION
+	run_docker_build
+	echo docker push "$@" --all-tags legeyda/ocserv
 }
 
 run_version() {
-	git_version
+	bobshell_git_version
 }
 
 shelduck import https://raw.githubusercontent.com/legeyda/bobshell/refs/heads/unstable/entry_point.sh
